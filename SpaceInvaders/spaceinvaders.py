@@ -10,8 +10,8 @@ from random import choice
 
 ''' ============================================================ '''
 import socket
-host = '0.0.0.0'
-port = 4000
+host = '127.0.0.1'
+port = 65432
 mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 mySocket.bind((host, port))
 mySocket.setblocking(0)
