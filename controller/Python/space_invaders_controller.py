@@ -3,6 +3,7 @@
 """
 
 from ECE16Lib.Communication import Communication
+from ECE16Lib.Orientation import Orientation
 from time import sleep
 import socket, pygame
 
@@ -14,10 +15,11 @@ mySocket.connect((host, port))
 
 class PygameController:
   comms = None
+  ori = None
 
-  def __init__(self, serial_name, baud_rate):
+  def __init__(self, serial_name, baud_rate, num_samples, fs):
     self.comms = Communication(serial_name, baud_rate)
-
+    self.ori = Orientation(num_samples, fs)
   def run(self):
     # 1. make sure data sending is stopped by ending streaming
     self.comms.send_message("stop")
@@ -32,18 +34,15 @@ class PygameController:
     while True:
       message = self.comms.receive_message()
       if(message != None):
-        command = None
-        message = int(message)
-        # if message == 0:
-        #   command = "FLAT"
-        # if message == 1:
-        #   command = "UP"
-        if message == 2:
-          command = "FIRE"
-        elif message == 3:
-          command = "LEFT"
-        elif message == 4:
-          command = "RIGHT"
+                time, ax, ay, az, button = message.split(",")
+        ori.add(int(time), int(ax), int(ay), int(az))
+        command =  ori.get_orientation()
+        # NOTE: if we want to be able to fire and move at the same time,
+        # we have to send the info for both in the same command
+        if(button == 1):
+            command = command + ",Fire"
+        else:
+            command = command + ",NoFire"
 
         if command is not None:
           mySocket.send(command.encode("UTF-8"))
@@ -52,7 +51,9 @@ class PygameController:
 if __name__== "__main__":
   serial_name = "COM4"
   baud_rate = 115200
-  controller = PygameController(serial_name, baud_rate)
+  num_samples = 5 # 0.1 seconds at 50Hz
+  fs = 50
+  controller = PygameController(serial_name, baud_rate, num_samples, fs)
 
   try:
     controller.run()

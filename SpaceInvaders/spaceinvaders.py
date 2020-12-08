@@ -480,7 +480,9 @@ class SpaceInvaders(object):
 
             if msg == "QUIT":
                 sys.exit()
-            if msg == "FIRE":
+
+            move_command , weapon_command = msg.split(,)
+            if weapon_command == "FIRE":
                 if len(self.bullets) == 0 and self.shipAlive:
                     if self.score < 1000:
                         bullet = Bullet(self.player.rect.x + 23,
@@ -500,9 +502,9 @@ class SpaceInvaders(object):
                         self.bullets.add(rightbullet)
                         self.allSprites.add(self.bullets)
                         self.sounds['shoot2'].play()
-                self.player.update_udp_socket(msg)
+                self.player.update_udp_socket(move_command)
             else:
-                self.player.update_udp_socket(msg)
+                self.player.update_udp_socket(move_command)
         except BlockingIOError:
             pass # do nothing if there's no data
     ''' ============================================================ '''
