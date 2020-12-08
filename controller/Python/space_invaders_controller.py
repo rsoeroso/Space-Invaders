@@ -50,7 +50,7 @@ class PygameController:
 
 
 if __name__== "__main__":
-  serial_name = "/dev/cu.BTDemo-ESP32SPP"
+  serial_name = "COM4"
   baud_rate = 115200
   controller = PygameController(serial_name, baud_rate)
 

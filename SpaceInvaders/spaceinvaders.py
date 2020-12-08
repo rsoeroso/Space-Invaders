@@ -492,6 +492,7 @@ class SpaceInvaders(object):
                         self.bullets.add(rightbullet)
                         self.allSprites.add(self.bullets)
                         self.sounds['shoot2'].play()
+                self.player.update_udp_socket(msg)
             else:
                 self.player.update_udp_socket(msg)
         except BlockingIOError:

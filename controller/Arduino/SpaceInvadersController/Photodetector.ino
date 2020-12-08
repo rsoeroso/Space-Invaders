@@ -40,5 +40,5 @@ void setupPhotoSensor() {
  */
 void readPhotoSensor() {
   // Get heartbeat pulse data and invert it
-  ppg = MAX_READING - photoSensor.getIR();
+  ppg = photoSensor.getIR();
 }
