@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------------------------------
-// =========== Code for Sampling the Sensors ============ 
+// =========== Code for Sampling the Sensors ============
 // ----------------------------------------------------------------------------------------------------
 
 /*
@@ -17,13 +17,13 @@ unsigned long timeEnd = 0;                    // End time timing variable
 bool sampleSensors() {
   timeEnd = micros();
   if(timeEnd - timeStart >= sampleDelay) {
-    displaySampleRate(timeEnd);
+    //displaySampleRate(timeEnd); //we need all the screen space so removing this
     timeStart = timeEnd;
 
     // Read the sensors and store their outputs in global variables
     sampleTime = millis();
     readAccelSensor();     // values stored in "ax", "ay", and "az"
-    readPhotoSensor();     // value stored in "ppg"
+    //readPhotoSensor();     // value stored in "ppg"
     return true;
   }
 

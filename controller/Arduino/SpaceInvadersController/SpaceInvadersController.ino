@@ -5,6 +5,7 @@
 int ax = 0; int ay = 0; int az = 0;
 int ppg = 0;        // PPG from readPhotoSensor() (in Photodetector tab)
 int sampleTime = 0; // Time of last sample (in Sampling tab)
+int button = 0; //needed to create this for message structure - Max
 bool sending;
 
 /*
@@ -39,6 +40,6 @@ void loop() {
 
   // Send the orientation of the board
   if(sending && sampleSensors()) {
-    sendMessage(String(getOrientation()));
+    sendMessage(String(sampleTime)+","+String(ax)+","+String(ay)+","+String(az)+","+String(button));
   }
 }
