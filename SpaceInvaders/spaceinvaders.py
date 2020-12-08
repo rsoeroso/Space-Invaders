@@ -61,10 +61,18 @@ class Ship(sprite.Sprite):
         game.screen.blit(self.image, self.rect)
 
     def update_udp_socket(self, direction):
-        if direction == "LEFT" and self.rect.x > 10:
+        if direction == "LEFTL" and self.rect.x > 10:
             self.rect.x -= self.speed
-        if direction == "RIGHT" and self.rect.x < 740:
+        if direction == "LEFTM" and self.rect.x > 10:
+            self.rect.x -= 2 * self.speed
+        if direction == "LEFTH" and self.rect.x > 10:
+            self.rect.x -= 3 * self.speed
+        if direction == "RIGHTL" and self.rect.x < 740:
             self.rect.x += self.speed
+        if direction == "RIGHTM" and self.rect.x < 740:
+            self.rect.x += 2 * self.speed
+        if direction == "RIGHTH" and self.rect.x < 740:
+            self.rect.x += 3 * self.speed
         game.screen.blit(self.image, self.rect)
 
 
