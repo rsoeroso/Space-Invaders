@@ -61,10 +61,18 @@ class Ship(sprite.Sprite):
         game.screen.blit(self.image, self.rect)
 
     def update_udp_socket(self, direction):
-        if direction == "LEFT" and self.rect.x > 10:
+        if direction == "LEFTL" and self.rect.x > 10:
             self.rect.x -= self.speed
-        if direction == "RIGHT" and self.rect.x < 740:
+        if direction == "LEFTM" and self.rect.x > 10:
+            self.rect.x -= 2 * self.speed
+        if direction == "LEFTH" and self.rect.x > 10:
+            self.rect.x -= 3 * self.speed
+        if direction == "RIGHTL" and self.rect.x < 740:
             self.rect.x += self.speed
+        if direction == "RIGHTM" and self.rect.x < 740:
+            self.rect.x += 2 * self.speed
+        if direction == "RIGHTH" and self.rect.x < 740:
+            self.rect.x += 3 * self.speed
         game.screen.blit(self.image, self.rect)
 
 
@@ -472,7 +480,9 @@ class SpaceInvaders(object):
 
             if msg == "QUIT":
                 sys.exit()
-            if msg == "FIRE":
+
+            move_command , weapon_command = msg.split(,)
+            if weapon_command == "FIRE":
                 if len(self.bullets) == 0 and self.shipAlive:
                     if self.score < 1000:
                         bullet = Bullet(self.player.rect.x + 23,
@@ -492,9 +502,9 @@ class SpaceInvaders(object):
                         self.bullets.add(rightbullet)
                         self.allSprites.add(self.bullets)
                         self.sounds['shoot2'].play()
-                self.player.update_udp_socket(msg)
+                self.player.update_udp_socket(move_command)
             else:
-                self.player.update_udp_socket(msg)
+                self.player.update_udp_socket(move_command)
         except BlockingIOError:
             pass # do nothing if there's no data
     ''' ============================================================ '''

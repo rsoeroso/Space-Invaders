@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------------------------------
-// =========== MAX30101 Photodetector Sensor ============ 
+// =========== MAX30101 Photodetector Sensor ============
 // ----------------------------------------------------------------------------------------------------
 
 /*
@@ -8,7 +8,7 @@
 #include <Wire.h>     // include the Wire protocol (for I2C communication)
 #include "MAX30105.h" // include the Photodetector library
 MAX30105 photoSensor; // instantiate the Photodetector object
-const int MAX_READING = 32767; // 2^15-1; might change w/config – TEST IT!!
+
 
 /*
  * Initialize the sensor to use red, green, and IR LEDs for the best signal
