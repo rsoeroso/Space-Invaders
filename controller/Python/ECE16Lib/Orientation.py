@@ -15,6 +15,7 @@ class Orientation:
     __thresh3 = 100
     __times = None #associated timestamps
     __num_samples = 0  # The length of data maintained in memory for threshold recalculation
+    __adjust_timer = 0
     __fs = 0           # Sampling rate in Hz
 
     def __init__(self,num_samples, fs, times=[], datax=[], datay=[], dataz=[]):
@@ -78,20 +79,27 @@ class Orientation:
         self.__orientation = command
 
         #adjust normalization values if needed
-        #x_avg = np.mean(x_arr)
-        #print(x_avg)
-        #y_avg = np.mean(y_arr)
-        #z_avg = np.mean(z_arr)
-        #if (abs(x_avg)>thresh3):
-        #    self.__x0 = self.__x0 + 0.5*x_avg
-        #if (abs(y_avg)>thresh3):
-        #    self.__y0 = self.__y0 + 0.5*y_avg
-        #if (abs(z_avg)>thresh3):
-        #    self.__z0 = self.__z0 + 0.5*z_avg
-        #recompute thresholds
-        #self.__thresh1 = 0.75*(self.__z0 - self.__x0)
-        #self.__thresh2 = 0.5*(self.__z0 - self.__x0)
-        #self.__thresh3 = 0.25*(self.__z0 - self.__x0)
+        if(self.__adjust_timer>=self.__num_samples):
+            x_avg = np.mean(x_arr)
+            y_avg = np.mean(y_arr)
+            z_avg = np.mean(z_arr)
+            self.__x0 = self.__x0 + 0.5*x_avg #adjust normalization value
+            x_arr = x_arr - 0.5*x_avg #adjust stored memory
+            self.__ax.add(x_arr.tolist()) #flush old memory values
+            self.__y0 = self.__y0 + 0.5*y_avg
+            y_arr = y_arr - 0.5*y_avg
+            self.__ay.add(y_arr.tolist())
+            self.__z0 = self.__z0 + 0.5*z_avg
+            z_arr = z_arr - 0.5*z_avg
+            self.__az.add(z_arr.tolist())
+            #recompute thresholds
+            self.__thresh1 = 0.75*(self.__z0 - self.__x0)
+            self.__thresh2 = 0.5*(self.__z0 - self.__x0)
+            self.__thresh3 = 0.25*(self.__z0 - self.__x0)
+
+            self.__adjust_timer = 0
+        else:
+            self.__adjust_timer = self.__adjust_timer+1
 
     def get_orientation(self):
         return self.__orientation
