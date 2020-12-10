@@ -35,8 +35,8 @@ class PygameController:
       message = self.comms.receive_message()
       if(message != None):
         time, ax, ay, az, button = message.split(",")
-        ori.add(int(time), int(ax), int(ay), int(az))
-        command =  ori.get_orientation()
+        self.ori.add(int(time), int(ax), int(ay), int(az))
+        command =  self.ori.get_orientation()
         # NOTE: if we want to be able to fire and move at the same time,
         # we have to send the info for both in the same command
         if(button == 1):
