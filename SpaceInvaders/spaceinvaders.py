@@ -481,7 +481,7 @@ class SpaceInvaders(object):
             if msg == "QUIT":
                 sys.exit()
 
-            move_command , weapon_command = msg.split(,)
+            move_command , weapon_command = msg.split(",")
             if weapon_command == "FIRE":
                 if len(self.bullets) == 0 and self.shipAlive:
                     if self.score < 1000:

@@ -5,13 +5,15 @@
 int ax = 0; int ay = 0; int az = 0;
 int ppg = 0;        // PPG from readPhotoSensor() (in Photodetector tab)
 int sampleTime = 0; // Time of last sample (in Sampling tab)
-int button = 0; //needed to create this for message structure - Max
 bool sending;
+const int BUTTON_PIN = 14; // change according to your circuit configuration - Rasya
+int button = 0; // 0=released, 1=pushed
 
 /*
  * Initialize the various components of the wearable
  */
 void setup() {
+  pinMode(BUTTON_PIN, INPUT);
   setupAccelSensor();
   setupCommunication();
   setupDisplay();
@@ -37,9 +39,18 @@ void loop() {
     sending = true;
     writeDisplay("Controller: On", 0, true);
   }
+  if (digitalRead(BUTTON_PIN) == HIGH){
+    button = 1;
+  }
+  else{
+    button = 0;
+  }
 
   // Send the orientation of the board
   if(sending && sampleSensors()) {
-    sendMessage(String(sampleTime)+","+String(ax)+","+String(ay)+","+String(az)+","+String(button));
+    String response = String(sampleTime) + ",";
+    response += String(ax) + "," + String(ay) + "," + String(az);
+    response += "," + String(button);
+    sendMessage(response);
   }
 }
