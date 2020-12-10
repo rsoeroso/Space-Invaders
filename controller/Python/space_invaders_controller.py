@@ -36,13 +36,14 @@ class PygameController:
       if(message != None):
         time, ax, ay, az, button = message.split(",")
         self.ori.add(int(time), int(ax), int(ay), int(az))
+        self.ori.process()
         command =  self.ori.get_orientation()
         # NOTE: if we want to be able to fire and move at the same time,
         # we have to send the info for both in the same command
-        if(button == 1):
-            command = command + ",Fire"
+        if(int(button) == 1):
+            command = command + ",FIRE" #this used to be lower case but the pygame expects upper case
         else:
-            command = command + ",NoFire"
+            command = command + ",NoFIRE"
 
         if command is not None:
           mySocket.send(command.encode("UTF-8"))
@@ -51,7 +52,8 @@ class PygameController:
 if __name__== "__main__":
   serial_name = "COM4"
   baud_rate = 115200
-  num_samples = 5 # 0.1 seconds at 50Hz
+  num_samples = 100 # 2 seconds at 50Hz (this determines how fast the thresholds readjust)
+                    # (the higher the num_samples, the longer it takes)
   fs = 50
   controller = PygameController(serial_name, baud_rate, num_samples, fs)
 

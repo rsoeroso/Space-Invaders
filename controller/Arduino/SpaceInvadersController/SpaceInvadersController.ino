@@ -39,7 +39,8 @@ void loop() {
     sending = true;
     writeDisplay("Controller: On", 0, true);
   }
-  if (digitalRead(BUTTON_PIN) == HIGH){
+  //low means pushed for me, check on your board
+  if (digitalRead(BUTTON_PIN) == LOW){
     button = 1;
   }
   else{
