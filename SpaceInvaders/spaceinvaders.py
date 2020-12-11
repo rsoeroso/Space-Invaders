@@ -593,7 +593,7 @@ class SpaceInvaders(object):
             else:
                 self.gameOver = True
                 self.startGame = False
-            
+
             # decrement lives counter
             if self.lives > 0:
                 self.lives = self.lives - 1
@@ -708,9 +708,9 @@ class SpaceInvaders(object):
                     self.create_new_ship(self.makeNewShip, currentTime)
                     self.make_enemies_shoot()
 
-                # send the current lives and score
+                     # send the current lives and score
                     lives_score_msg = str(self.lives) + "," + str(self.score)
-                    # print(lives_score_msg)
+                    print(lives_score_msg)
                     
                     if self.addr is not None:
                         # print("sending to client...", self.addr)
@@ -721,6 +721,7 @@ class SpaceInvaders(object):
                 # Reset enemy starting position
                 self.enemyPosition = ENEMY_DEFAULT_POSITION
                 self.create_game_over(currentTime)
+
 
             display.update()
             self.clock.tick(60)

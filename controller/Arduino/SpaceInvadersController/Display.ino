@@ -47,7 +47,7 @@ void writeDisplayCSV(String message, int commaCount) {
   for(int i=0; i<=commaCount; i++) {
     int index = message.indexOf(',', startIndex);
     String subMessage = message.substring(startIndex, index);
-    startIndex = index + 1;
     writeDisplay(subMessage.c_str(), i, false);
+    startIndex = index + 1;
   }
 }

@@ -21,6 +21,7 @@ class PygameController:
   def __init__(self, serial_name, baud_rate, num_samples, fs):
     self.comms = Communication(serial_name, baud_rate)
     self.ori = Orientation(num_samples, fs)
+
   def run(self):
     # 1. make sure data sending is stopped by ending streaming
     self.comms.send_message("stop")
@@ -32,29 +33,32 @@ class PygameController:
 
     # 3. Forever collect orientation and send to PyGame until user exits
     print("Use <CTRL+C> to exit the program.\n")
+    lives_prev = 3
+    score_prev = -1
     while True:
-      # try:
-      #   lives_prev = -1
-      #   score_prev = -1
-      #   lives_score_msg = mySocket.recv(1024) # receive 1024 bytes
-      #   lives_score_msg = lives_score_msg.decode('utf-8') 
-      #   lives, score = lives_score_msg.split(",")
-      #   print("lives: " + str(lives) + " score: " + str(score))
-      #   # only send the data to MCU if there is a change either in lives or score, send it as comma-separated
-      #   if (lives != lives_prev) or (score != score_prev):
-      #     lives_score_msg = 'Lives: ' + str(lives) + ',' + 'Score: ' + str(score)
-      #     self.comms.send_message(str(lives_score_msg)+"\n")
-      #     lives_prev = lives
-      #     score_prev = score
-      # except:
-      #   pass
-      print("hello0")
+      try:
+        lives_score_msg = mySocket.recv(1024) # receive 1024 bytes
+        lives_score_msg = lives_score_msg.decode('utf-8') 
+        lives, score = lives_score_msg.split(",")
+        # print("lives: " + str(lives) + " score: " + str(score))
+        # only send the data to MCU if there is a change either in lives or score, send it as comma-separated
+        if (int(lives) < lives_prev) or (int(score) > score_prev):
+          lives_score_msg = 'Lives: ' + str(lives) + ',' + 'Score: ' + str(score)
+          
+          if (int(lives) < lives_prev):
+            self.comms.send_message("buzz\n")
+
+          print(str(lives_score_msg))
+          self.comms.send_message(str(lives_score_msg)+"\n")
+          lives_prev = int(lives)
+          score_prev = int(score)
+      except:
+        pass
+
       message = self.comms.receive_message()
       if(message != None):
         time, ax, ay, az, button = message.split(",")
-        print("hello1")
         self.ori.add(int(time), int(ax), int(ay), int(az))
-        print("hello2")
         self.ori.process()
         command =  self.ori.get_orientation()
         # NOTE: if we want to be able to fire and move at the same time,
@@ -87,4 +91,4 @@ if __name__== "__main__":
     mySocket.send("QUIT".encode("UTF-8"))
     mySocket.close()
 
-  input("[Press ENTER to finish.]")      
+  input("[Press ENTER to finish.]")
