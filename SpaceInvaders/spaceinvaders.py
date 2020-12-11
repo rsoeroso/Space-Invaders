@@ -382,6 +382,11 @@ class SpaceInvaders(object):
         self.life3 = Life(769, 3)
         self.livesGroup = sprite.Group(self.life1, self.life2, self.life3)
 
+        # lives counter
+        self.lives = 3
+
+        self.addr = None
+
     def reset(self, score):
         self.player = Ship()
         self.playerGroup = sprite.Group(self.player)
@@ -474,7 +479,8 @@ class SpaceInvaders(object):
     ''' ============================================================ '''
     def check_input_udp_socket(self):
         try:
-            msg, _ = mySocket.recvfrom(1024) # receive 1024 bytes
+            msg, self.addr = mySocket.recvfrom(1024) # receive 1024 bytes
+            # print("client addr: ", self.addr)
             msg = msg.decode('utf-8')
             print("Command: " + msg)
 
@@ -587,6 +593,11 @@ class SpaceInvaders(object):
             else:
                 self.gameOver = True
                 self.startGame = False
+            
+            # decrement lives counter
+            if self.lives > 0:
+                self.lives = self.lives - 1
+
             self.sounds['shipexplosion'].play()
             ShipExplosion(player, self.explosionsGroup)
             self.makeNewShip = True
@@ -696,6 +707,14 @@ class SpaceInvaders(object):
                     self.check_collisions()
                     self.create_new_ship(self.makeNewShip, currentTime)
                     self.make_enemies_shoot()
+
+                # send the current lives and score
+                    lives_score_msg = str(self.lives) + "," + str(self.score)
+                    # print(lives_score_msg)
+                    
+                    if self.addr is not None:
+                        # print("sending to client...", self.addr)
+                        mySocket.sendto(lives_score_msg.encode("UTF-8"), self.addr)
 
             elif self.gameOver:
                 currentTime = time.get_ticks()

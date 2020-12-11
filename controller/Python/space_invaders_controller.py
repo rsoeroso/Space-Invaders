@@ -12,6 +12,7 @@ host = "127.0.0.1"
 port = 65432
 mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 mySocket.connect((host, port))
+mySocket.setblocking(False)
 
 class PygameController:
   comms = None
@@ -32,17 +33,36 @@ class PygameController:
     # 3. Forever collect orientation and send to PyGame until user exits
     print("Use <CTRL+C> to exit the program.\n")
     while True:
+      # try:
+      #   lives_prev = -1
+      #   score_prev = -1
+      #   lives_score_msg = mySocket.recv(1024) # receive 1024 bytes
+      #   lives_score_msg = lives_score_msg.decode('utf-8') 
+      #   lives, score = lives_score_msg.split(",")
+      #   print("lives: " + str(lives) + " score: " + str(score))
+      #   # only send the data to MCU if there is a change either in lives or score, send it as comma-separated
+      #   if (lives != lives_prev) or (score != score_prev):
+      #     lives_score_msg = 'Lives: ' + str(lives) + ',' + 'Score: ' + str(score)
+      #     self.comms.send_message(str(lives_score_msg)+"\n")
+      #     lives_prev = lives
+      #     score_prev = score
+      # except:
+      #   pass
+      print("hello0")
       message = self.comms.receive_message()
       if(message != None):
         time, ax, ay, az, button = message.split(",")
+        print("hello1")
         self.ori.add(int(time), int(ax), int(ay), int(az))
+        print("hello2")
+        self.ori.process()
         command =  self.ori.get_orientation()
         # NOTE: if we want to be able to fire and move at the same time,
         # we have to send the info for both in the same command
-        if(button == 1):
-            command = command + ",Fire"
+        if(int(button) == 1):
+            command = command + ",FIRE" #this used to be lower case but the pygame expects upper case
         else:
-            command = command + ",NoFire"
+            command = command + ",NoFIRE"
 
         if command is not None:
           mySocket.send(command.encode("UTF-8"))
@@ -51,7 +71,8 @@ class PygameController:
 if __name__== "__main__":
   serial_name = "COM4"
   baud_rate = 115200
-  num_samples = 5 # 0.1 seconds at 50Hz
+  num_samples = 100 # 2 seconds at 50Hz (this determines how fast the thresholds readjust)
+                    # (the higher the num_samples, the longer it takes)
   fs = 50
   controller = PygameController(serial_name, baud_rate, num_samples, fs)
 
@@ -66,4 +87,4 @@ if __name__== "__main__":
     mySocket.send("QUIT".encode("UTF-8"))
     mySocket.close()
 
-  input("[Press ENTER to finish.]")
+  input("[Press ENTER to finish.]")      

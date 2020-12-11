@@ -18,6 +18,7 @@ void setup() {
   setupCommunication();
   setupDisplay();
   setupPhotoSensor();
+  setupMotor();
   sending = false;
 
   writeDisplay("Ready...", 1, true);
@@ -39,7 +40,16 @@ void loop() {
     sending = true;
     writeDisplay("Controller: On", 0, true);
   }
-  if (digitalRead(BUTTON_PIN) == HIGH){
+  else{
+    // Display current lives and score 
+    writeDisplay(" ", 0, true);
+    writeDisplay(" ", 1, true);
+    writeDisplay(" ", 2, true);
+    writeDisplay(" ", 3, true);
+    writeDisplayCSV(command, 1);
+  }
+  
+  if (digitalRead(BUTTON_PIN) == LOW){
     button = 1;
   }
   else{
