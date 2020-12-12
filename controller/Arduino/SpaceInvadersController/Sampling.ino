@@ -6,7 +6,10 @@
  * Sampling settings to read the sensors at 100 Hz
  */
 int sampleRate = 50;                         // Frequency of reading the sensors (in Hz)
+<<<<<<< HEAD
+=======
 //reduced this to avoid lagging out game
+>>>>>>> 8085db82a43fcaaedf2cd467f9ebff4b96669849
 unsigned long sampleDelay = 1e6 / sampleRate; // Time between samples (in microseconds)
 unsigned long timeStart = 0;                  // Start time timing variable
 unsigned long timeEnd = 0;                    // End time timing variable

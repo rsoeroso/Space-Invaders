@@ -12,6 +12,7 @@ host = "127.0.0.1"
 port = 65432
 mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 mySocket.connect((host, port))
+mySocket.setblocking(False)
 
 class PygameController:
   comms = None
@@ -20,6 +21,7 @@ class PygameController:
   def __init__(self, serial_name, baud_rate, num_samples, fs):
     self.comms = Communication(serial_name, baud_rate)
     self.ori = Orientation(num_samples, fs)
+
   def run(self):
     # 1. make sure data sending is stopped by ending streaming
     self.comms.send_message("stop")
@@ -31,7 +33,28 @@ class PygameController:
 
     # 3. Forever collect orientation and send to PyGame until user exits
     print("Use <CTRL+C> to exit the program.\n")
+    lives_prev = 3
+    score_prev = -1
     while True:
+      try:
+        lives_score_msg = mySocket.recv(1024) # receive 1024 bytes
+        lives_score_msg = lives_score_msg.decode('utf-8') 
+        lives, score = lives_score_msg.split(",")
+        # print("lives: " + str(lives) + " score: " + str(score))
+        # only send the data to MCU if there is a change either in lives or score, send it as comma-separated
+        if (int(lives) < lives_prev) or (int(score) > score_prev):
+          lives_score_msg = 'Lives: ' + str(lives) + ',' + 'Score: ' + str(score)
+          
+          if (int(lives) < lives_prev):
+            self.comms.send_message("buzz\n")
+
+          print(str(lives_score_msg))
+          self.comms.send_message(str(lives_score_msg)+"\n")
+          lives_prev = int(lives)
+          score_prev = int(score)
+      except:
+        pass
+
       message = self.comms.receive_message()
       if(message != None):
         time, ax, ay, az, button = message.split(",")
