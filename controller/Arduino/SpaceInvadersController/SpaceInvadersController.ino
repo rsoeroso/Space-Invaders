@@ -34,7 +34,7 @@ void setup() {
  */
 void loop() {
   buzzEnd = millis();
-  // Parse command coming from Python (either "stop" or "start")
+  // Parse command coming from Python (either "stop", "start", "buzz" or score information)
   String command = receiveMessage();
   if(command == "stop") {
     sending = false;
@@ -44,7 +44,6 @@ void loop() {
     sending = true;
     writeDisplay("Controller: On", 0, true);
   }
-<<<<<<< HEAD
   else if(command == ""){
     // do nothing
   }
@@ -53,23 +52,20 @@ void loop() {
     buzzStart = millis();
   }
   else{
-    // Display current lives and score 
+    // Display current lives and score
     writeDisplay(" ", 0, true);
     writeDisplay(" ", 1, true);
     writeDisplay(" ", 2, true);
     writeDisplay(" ", 3, true);
-    writeDisplayCSV(command, 1);
+    writeDisplayCSV(command, 2);
   }
 
   // stop buzzing after 2 seconds
   if (buzzEnd - buzzStart >= 2000){
     deactivateMotor();
   }
-  
-  //low means pushed 
-=======
-  //low means pushed for me, check on your board
->>>>>>> 8085db82a43fcaaedf2cd467f9ebff4b96669849
+
+  //low means pushed
   if (digitalRead(BUTTON_PIN) == LOW){
     button = 1;
   }
