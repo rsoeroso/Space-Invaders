@@ -593,6 +593,10 @@ class SpaceInvaders(object):
             else:
                 self.gameOver = True
                 self.startGame = False
+                game_over_message = "gameover"
+                if self.addr is not None:
+                    # print("sending to client...", self.addr)
+                    mySocket.sendto(game_over_message.encode("UTF-8"), self.addr)
 
             # decrement lives counter
             if self.lives > 0:
@@ -609,6 +613,10 @@ class SpaceInvaders(object):
             if not self.player.alive() or self.enemies.bottom >= 600:
                 self.gameOver = True
                 self.startGame = False
+                game_over_message = "gameover"
+                if self.addr is not None:
+                    # print("sending to client...", self.addr)
+                    mySocket.sendto(game_over_message.encode("UTF-8"), self.addr)
 
         sprite.groupcollide(self.bullets, self.allBlockers, True, True)
         sprite.groupcollide(self.enemyBullets, self.allBlockers, True, True)
@@ -711,7 +719,7 @@ class SpaceInvaders(object):
                      # send the current lives and score
                     lives_score_msg = str(self.lives) + "," + str(self.score)
                     print(lives_score_msg)
-                    
+
                     if self.addr is not None:
                         # print("sending to client...", self.addr)
                         mySocket.sendto(lives_score_msg.encode("UTF-8"), self.addr)
