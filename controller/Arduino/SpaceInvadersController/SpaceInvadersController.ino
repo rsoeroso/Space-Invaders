@@ -44,7 +44,6 @@ void loop() {
     sending = true;
     writeDisplay("Controller: On", 0, true);
   }
-<<<<<<< HEAD
   else if(command == ""){
     // do nothing
   }
@@ -67,9 +66,6 @@ void loop() {
   }
 
   //low means pushed
-=======
-  //low means pushed for me, check on your board
->>>>>>> 8085db82a43fcaaedf2cd467f9ebff4b96669849
   if (digitalRead(BUTTON_PIN) == LOW){
     button = 1;
   }

@@ -102,8 +102,4 @@ class Orientation:
             self.__adjust_timer = self.__adjust_timer+1
 
     def get_orientation(self):
-<<<<<<< HEAD
         return self.__orientation
-=======
-        return self.__orientation
->>>>>>> 8085db82a43fcaaedf2cd467f9ebff4b96669849
