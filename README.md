@@ -6,5 +6,7 @@ The game is a modified version of Space Invaders based off of this project: http
 
 You must have Pygame installed before being able to run the game: https://www.pygame.org/
 
+## Team Members
+Name/PID    : Rasya Soeroso/A16088908
 
-i have eddited the readme
+Name/PID    : 
