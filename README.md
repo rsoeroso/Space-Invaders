@@ -9,4 +9,4 @@ You must have Pygame installed before being able to run the game: https://www.py
 ## Team Members
 Name/PID    : Rasya Soeroso/A16088908
 
-Name/PID    : 
+Name/PID    : Maxime Ghesquiere/A15400735
